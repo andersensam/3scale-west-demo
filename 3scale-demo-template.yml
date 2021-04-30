@@ -1,0 +1,246 @@
+apiVersion: v1
+kind: Template
+labels:
+  template: 3scale-demo-template
+message: Deployed the 3scale API Management demo template!
+metadata:
+  name: 3scale-demo-template
+objects:
+  - kind: DeploymentConfig
+    apiVersion: v1
+    metadata:
+      labels:
+        application: ${APPLICATION_NAME}
+        api-instance: instance-1
+      name: ${APPLICATION_NAME}-api-1
+    spec:
+      replicas: 1
+      selector:
+        api-instance: instance-1
+      strategy:
+        resources: {}
+      template:
+        metadata:
+          labels:
+            application: ${APPLICATION_NAME}
+            api-instance: instance-1
+        spec:
+          imagePullSecrets:
+            - name: ${PULL_SECRET_NAME}
+          containers:
+          - args:
+            - sh
+            - -c
+            - python3 /tmp/app/wsgi.py
+            env:
+            - name: API_VERSION
+              value: '1'
+            image: quay.io/redhat_emp1/3scale-demo-api:latest
+            name: ${APPLICATION_NAME}-api-1
+            ports:
+            - containerPort: 8080
+            resources:
+              limits:
+                cpu: 30m
+                memory: 256Mi
+              requests:
+                cpu: 10m
+                memory: 64Mi
+          restartPolicy: Always
+      test: false
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      labels:
+        application: ${APPLICATION_NAME}
+        api-instance: instance-1
+      name: instance-1-service
+    spec:
+      ports:
+      - name: "8080"
+        port: 8080
+        targetPort: 8080
+      selector:
+        api-instance: instance-1
+  - kind: Route
+    apiVersion: v1
+    metadata:
+      name: instance-1-route
+      labels:
+        api-instance: instance-1
+        application: ${APPLICATION_NAME}
+    spec:
+      host: 3scale-demo-api-1.${OCP_URL}
+      to:
+        kind: Service
+        name: instance-1-service
+        weight: 100
+      port:
+        targetPort: '8080'
+      tls:
+        termination: edge
+      wildcardPolicy: None
+  - kind: DeploymentConfig
+    apiVersion: v1
+    metadata:
+      labels:
+        application: ${APPLICATION_NAME}
+        api-instance: instance-2
+      name: ${APPLICATION_NAME}-api-2
+    spec:
+      replicas: 1
+      selector:
+        api-instance: instance-2
+      strategy:
+        resources: {}
+      template:
+        metadata:
+          labels:
+            application: ${APPLICATION_NAME}
+            api-instance: instance-2
+        spec:
+          imagePullSecrets:
+            - name: ${PULL_SECRET_NAME}
+          containers:
+          - args:
+            - sh
+            - -c
+            - python3 /tmp/app/wsgi.py
+            env:
+            - name: API_VERSION
+              value: '2'
+            image: quay.io/redhat_emp1/3scale-demo-api:latest
+            name: ${APPLICATION_NAME}-api-2
+            ports:
+            - containerPort: 8080
+            resources:
+              limits:
+                cpu: 30m
+                memory: 256Mi
+              requests:
+                cpu: 10m
+                memory: 64Mi
+          restartPolicy: Always
+      test: false
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      labels:
+        application: ${APPLICATION_NAME}
+        api-instance: instance-2
+      name: instance-2-service
+    spec:
+      ports:
+      - name: "8080"
+        port: 8080
+        targetPort: 8080
+      selector:
+        api-instance: instance-2
+  - kind: Route
+    apiVersion: v1
+    metadata:
+      name: instance-2-route
+      labels:
+        api-instance: instance-2
+        application: ${APPLICATION_NAME}
+    spec:
+      host: 3scale-demo-api-2.${OCP_URL}
+      to:
+        kind: Service
+        name: instance-2-service
+        weight: 100
+      port:
+        targetPort: '8080'
+      tls:
+        termination: edge
+      wildcardPolicy: None
+  - kind: DeploymentConfig
+    apiVersion: v1
+    metadata:
+      labels:
+        application: ${APPLICATION_NAME}
+        api-instance: instance-3
+      name: ${APPLICATION_NAME}-api-3
+    spec:
+      replicas: 1
+      selector:
+        api-instance: instance-3
+      strategy:
+        resources: {}
+      template:
+        metadata:
+          labels:
+            application: ${APPLICATION_NAME}
+            api-instance: instance-3
+        spec:
+          imagePullSecrets:
+            - name: ${PULL_SECRET_NAME}
+          containers:
+          - args:
+            - sh
+            - -c
+            - python3 /tmp/app/wsgi.py
+            env:
+            - name: API_VERSION
+              value: '3'
+            image: quay.io/redhat_emp1/3scale-demo-api:latest
+            name: ${APPLICATION_NAME}-api-3
+            ports:
+            - containerPort: 8080
+            resources:
+              limits:
+                cpu: 30m
+                memory: 256Mi
+              requests:
+                cpu: 10m
+                memory: 64Mi
+          restartPolicy: Always
+      test: false
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      labels:
+        application: ${APPLICATION_NAME}
+        api-instance: instance-3
+      name: instance-3-service
+    spec:
+      ports:
+      - name: "8080"
+        port: 8080
+        targetPort: 8080
+      selector:
+        api-instance: instance-3
+  - kind: Route
+    apiVersion: v1
+    metadata:
+      name: instance-3-route
+      labels:
+        api-instance: instance-3
+        application: ${APPLICATION_NAME}
+    spec:
+      host: 3scale-demo-api-3.${OCP_URL}
+      to:
+        kind: Service
+        name: instance-3-service
+        weight: 100
+      port:
+        targetPort: '8080'
+      tls:
+        termination: edge
+      wildcardPolicy: None
+parameters:
+  - name: APPLICATION_NAME
+    displayName: Application name
+    description: Name of the application being deployed
+    value: 3scale-api-demo
+    required: true
+  - name: PULL_SECRET_NAME
+    displayName: PullSecret name
+    description: Name of the pull secret in OpenShift
+    value: samander-pull-secret
+    required: true
+  - name: OCP_URL
+    displayName: OpenShift Base URL
+    description: Base URL being used for OpenShift applications, e.g. *.apps.openshift.com
+    value: apps.lab.andersentech.net
+    required: true
