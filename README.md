@@ -36,3 +36,31 @@
         accessModes:
             - ReadWriteMany
         ```
+        - Through the storage capacity is relatively arbitrary, I've found that provisioning a PV with less than 15Gi typically won't work
+    - The PVCs `backend-redis-storage`, `system-redis-storage`, and `mysql-storage` require PVs with the `ReadWriteOnce` access mode.
+        ```
+        kind: PersistentVolume
+        apiVersion: v1
+        metadata:
+        name: 3scale-2
+        spec:
+        capacity:
+            storage: 100Gi
+        nfs:
+            server: 192.168.1.210
+            path: /var/nfsshare/claims/2
+        accessModes:
+            - ReadWriteOnce
+        ```
+    - In total, there should be **4 Persistent Volumes** ready for use by the 3Scale operator
+- While the following isn't *required*, it is highly **recommended**: create a new project/namespace for the demo
+    - New projects can be created from the OpenShift Console or via the `oc` tool
+        - If using the OpenShift Console, click "Projects" on the lefthand sidebar under the "Home" section. Click "Create Project" in the upper righthand corner
+        - If using the `oc` tool, ensure you're logged into the proper OpenShift cluster, then type `oc create namespace 3scale-northwest-demo` for example
+    - While everything deployed via the 3Scale operator is tagged, I find it easier to delete an entire namespace than try to delete resources individually
+
+## Deploying the 3Scale API Management Operator
+- Change projects to `3scale-northwest-demo`, or whatever project/namespace you dedicated to this deployment
+- Using the lefthand menu, select OperatorHub. The 3Scale API Management operator should be the first choice. Click install in the upper lefthand corner to launch the install process
+- The installation process will take a few minutes to gather requirements and spin up the pods
+- You can monitor installation progress by looking at the `Routes` created by the operator. You'll know installation is complete when you see roughly **6 routes** present, including one with the format https://**3scale-admin**.apps.{OCP Subdomain}
