@@ -22,17 +22,17 @@
 ## OpenShift cluster prerequisites
 - Deploying 3Scale API Management requires a few Persistent Volumes (PV) to be available
     - The Persistent Volume Claim (PVC) `system-storage` requires a volume with the `ReadWriteMany` access mode. An example can be found below   
-```
-kind: PersistentVolume
-apiVersion: v1
-metadata:
-name: 3scale-1
-spec:
-capacity:
-    storage: 100Gi
-nfs:
-    server: 192.168.1.210
-    path: /var/nfsshare/claims/1
-accessModes:
-    - ReadWriteMany
-```
+        ```
+        kind: PersistentVolume
+        apiVersion: v1
+        metadata:
+        name: 3scale-1
+        spec:
+        capacity:
+            storage: 100Gi
+        nfs:
+            server: 192.168.1.210
+            path: /var/nfsshare/claims/1
+        accessModes:
+            - ReadWriteMany
+        ```
