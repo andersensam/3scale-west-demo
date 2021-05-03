@@ -25,8 +25,6 @@ objects:
             application: ${APPLICATION_NAME}
             api-instance: instance-1
         spec:
-          imagePullSecrets:
-            - name: ${PULL_SECRET_NAME}
           containers:
           - args:
             - sh
@@ -35,7 +33,7 @@ objects:
             env:
             - name: API_VERSION
               value: '1'
-            image: quay.io/redhat_emp1/3scale-demo-api:latest
+            image: quay.io/samander/3scale-west-demo:latest
             name: ${APPLICATION_NAME}-api-1
             ports:
             - containerPort: 8080
@@ -99,8 +97,6 @@ objects:
             application: ${APPLICATION_NAME}
             api-instance: instance-2
         spec:
-          imagePullSecrets:
-            - name: ${PULL_SECRET_NAME}
           containers:
           - args:
             - sh
@@ -109,7 +105,7 @@ objects:
             env:
             - name: API_VERSION
               value: '2'
-            image: quay.io/redhat_emp1/3scale-demo-api:latest
+            image: quay.io/samander/3scale-west-demo:latest
             name: ${APPLICATION_NAME}-api-2
             ports:
             - containerPort: 8080
@@ -173,8 +169,6 @@ objects:
             application: ${APPLICATION_NAME}
             api-instance: instance-3
         spec:
-          imagePullSecrets:
-            - name: ${PULL_SECRET_NAME}
           containers:
           - args:
             - sh
@@ -183,7 +177,7 @@ objects:
             env:
             - name: API_VERSION
               value: '3'
-            image: quay.io/redhat_emp1/3scale-demo-api:latest
+            image: quay.io/samander/3scale-west-demo:latest
             name: ${APPLICATION_NAME}-api-3
             ports:
             - containerPort: 8080
@@ -233,11 +227,6 @@ parameters:
     displayName: Application name
     description: Name of the application being deployed
     value: 3scale-api-demo
-    required: true
-  - name: PULL_SECRET_NAME
-    displayName: PullSecret name
-    description: Name of the pull secret in OpenShift
-    value: samander-pull-secret
     required: true
   - name: OCP_URL
     displayName: OpenShift Base URL
