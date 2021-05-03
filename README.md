@@ -9,11 +9,30 @@
 
 ## Registering for Quay.io
 - In order to pull the demo images (containing the ‘fake’ APIs), users must have created an account on Quay.io and provided the username to Samuel Andersen [samander@redhat.com](mailto:samander@redhat.com)
-- [ ] To register, vist [https://quay.io](https://quay.io) and login with your existing Red Hat credentials
-- [ ] A username must be selected
+- To register, vist [https://quay.io](https://quay.io) and login with your existing Red Hat credentials
+- A username must be selected
 
 ## Client device prerequisites
 - Clients must have the `oc` tool installed and available in their `$PATH`
-- [ ] Visit your OpenShift console and in the upper righthand corner, select the question mark
-- [ ] Click "Command line tools"
-- [ ] Download the proper package for your OS/distribution and place in your `$PATH`
+- Visit your OpenShift console and in the upper righthand corner, select the question mark
+- Click "Command line tools"
+- Download the proper package for your OS/distribution and place in your `$PATH`
+- Login to the OpenShift cluster, copying the login token from "Copy login command", found in the upper righthand corner in the OpenShift Console
+
+## OpenShift cluster prerequisites
+- Deploying 3Scale API Management requires a few Persistent Volumes (PV) to be available
+    - The Persistent Volume Claim (PVC) `system-storage` requires a volume with the `ReadWriteMany` access mode. An example can be found below   
+```
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+name: 3scale-1
+spec:
+capacity:
+    storage: 100Gi
+nfs:
+    server: 192.168.1.210
+    path: /var/nfsshare/claims/1
+accessModes:
+    - ReadWriteMany
+```
