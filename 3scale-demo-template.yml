@@ -231,5 +231,4 @@ parameters:
   - name: OCP_URL
     displayName: OpenShift Base URL
     description: Base URL being used for OpenShift applications, e.g. *.apps.openshift.com
-    value: apps.lab.andersentech.net
     required: true

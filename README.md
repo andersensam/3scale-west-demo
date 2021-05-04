@@ -1,9 +1,9 @@
 # 3scale-west-demo
 
-3Scale API Management on OpenShift
+3scale API Management on OpenShift
 
 ## How to use this document
-- This document is intended for use by Solutions Architects and specialists to get 3Scale API Management setup on an existing OpenShift 4.X cluster. All recorded steps were performed on a cluster running version 4.6.X -- your mileage may vary on different versions. 
+- This document is intended for use by Solutions Architects and specialists to get 3scale API Management setup on an existing OpenShift 4.X cluster. All recorded steps were performed on a cluster running version 4.7.X -- your mileage may vary on different versions. 
 - The setup process expects some basic knowledge of OpenShift, specifically on how to use the “oc” tool and how to set up Persistent Volumes.
 - This guide will not explain how to get OpenShift setup for the first time. 
 
@@ -15,7 +15,7 @@
 - Login to the OpenShift cluster, copying the login token from "Copy login command", found in the upper righthand corner in the OpenShift Console
 
 ## OpenShift cluster prerequisites
-- Deploying 3Scale API Management requires a few Persistent Volumes (PV) to be available
+- Deploying 3scale API Management requires a few Persistent Volumes (PV) to be available
     - The Persistent Volume Claim (PVC) `system-storage` requires a volume with the `ReadWriteMany` access mode. An example can be found below   
         ```
         kind: PersistentVolume
@@ -47,15 +47,17 @@
         accessModes:
             - ReadWriteOnce
         ```
-    - In total, there should be **4 Persistent Volumes** ready for use by the 3Scale operator
+    - In total, there should be **4 Persistent Volumes** ready for use by the 3scale operator
 - While the following isn't *required*, it is highly **recommended**: create a new project/namespace for the demo
     - New projects can be created from the OpenShift Console or via the `oc` tool
         - If using the OpenShift Console, click "Projects" on the lefthand sidebar under the "Home" section. Click "Create Project" in the upper righthand corner
         - If using the `oc` tool, ensure you're logged into the proper OpenShift cluster, then type `oc create namespace 3scale-west-demo` for example
-    - While everything deployed via the 3Scale operator is tagged, I find it easier to delete an entire namespace than try to delete resources individually
+    - While everything deployed via the 3scale operator is tagged, I find it easier to delete an entire namespace than try to delete resources individually
 
-## Deploying the 3Scale API Management Operator
+## Deploying the 3scale API Management Operator
 - Change projects to `3scale-west-demo`, or whatever project/namespace you dedicated to this deployment
-- Using the lefthand menu, select OperatorHub. The 3Scale API Management operator should be the first choice. Click install in the upper lefthand corner to launch the install process
+- Using the lefthand menu, select OperatorHub. The 3scale API Management operator should be the first choice. Click install in the upper lefthand corner to launch the install process
 - The installation process will take a few minutes to gather requirements and spin up the pods
 - You can monitor installation progress by looking at the `Routes` created by the operator. You'll know installation is complete when you see roughly **6 routes** present, including one with the format https://**3scale-admin**.apps.{OCP Subdomain}
+
+## Deploying sample APIs for use within 3scale
