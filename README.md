@@ -64,11 +64,13 @@
 - Use `oc` to deploy `3scale-demo-template` within your preferred namespace
     - If using namespace `3scale-west-demo`, use the following commands:
         ```
-        oc project 3scale-demo-template
+        oc project 3scale-west-demo
         oc create -f 3scale-demo-template.yml
         ```
 - Using the `3scale-demo-template`, deploy the APIs and their associated routes
-    - The template requires a few variables to be defined, namely `APPLICATION_NAME` and `OCP_URL`. `APPLICATION_NAME` will be used to tag resources deployed by the template. There is a default value, set to `3scale-api-demo`. You **do not** need to change this value, but can by passing an override in the next command. `OCP_URL` on the other hand **does require** a value to be set on the command line.
+    - The template requires a few variables to be defined, namely `APPLICATION_NAME` and `OCP_URL`. `APPLICATION_NAME` will be used to tag resources deployed by the template. There is a default value, set to `3scale-api-demo`. You **do not** need to change this value, but can by passing an override in the next command. 
+
+    - `OCP_URL` on the other hand **does require** a value to be set on the command line.
         - The `OCP_URL` is the "apps domain" of your OpenShift cluster. If my console is located at [https://console.apps.lab.redhat.com](https://console.apps.lab.redhat.com), then my `OCP_URL` would be `apps.lab.redhat.com`
     ```
     oc new-app 3scale-demo-template -p OCP_URL=apps.lab.redhat.com
@@ -77,7 +79,7 @@
     ```
     oc new-app 3scale-demo-template -p OCP_URL=apps.lab.redhat.com -p APPLICATION_NAME=my-3scale-application
     ```
-- If successful, `oc` will output that it has created a number of resources and will provide the routes exposed for the fake APIs, following the format [https://3scale-demo-api-1.apps.lab.redhat.com](https://3scale-demo-api1-apps.lab.redhat.com)
+- If successful, `oc` will output that it has created a number of resources and will provide the routes exposed for the fake APIs, following the format [https://3scale-demo-api-1.apps.lab.redhat.com](https://3scale-demo-api-1-apps.lab.redhat.com)
 
 - Test successful deployment by using curl. Note the use of `-k` to prevent curl from complaining about self-signed certificates
     ```
