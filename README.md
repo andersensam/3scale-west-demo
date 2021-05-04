@@ -57,7 +57,13 @@
 ## Deploying the 3scale API Management Operator
 - Change projects to `3scale-west-demo`, or whatever project/namespace you dedicated to this deployment
 - Using the lefthand menu, select OperatorHub. The 3scale API Management operator should be the first choice. Click install in the upper lefthand corner to launch the install process
-- The installation process will take a few minutes to gather requirements and spin up the pods
+- The installation process will take a few minutes to gather requirements and spin up the operator pod
+- When installation is complete, click the operator, leading to a page with "Provided APIs".
+- On the second row, in the middle, there is an option for "API Manager", click "Create instance"
+- Provide a name and labels, if desired. The only required field is "Wildcard Domain".
+    - The "Wildcard Domain" is the "apps domain" of your OpenShift cluster. If my console is located at [https://console.apps.lab.redhat.com](https://console.apps.lab.redhat.com), then my "Wildcard Domain" would be `apps.lab.redhat.com`
+
+- Scroll to the bottom of the page and click "Create"
 - You can monitor installation progress by looking at the `Routes` created by the operator. You'll know installation is complete when you see roughly **6 routes** present, including one with the format https://**3scale-admin**.apps.{OCP Subdomain}
 
 ## Deploying sample APIs for use within 3scale
@@ -85,3 +91,19 @@
     ```
     curl -k https://3scale-demo-api-1.apps.lab.redhat.com/api/hello
     ```
+
+## Setting up 3scale API Manager
+With the API Manager and demo APIs setup, it's time to jump into the 3scale Admin Console. We'll need to get the admin password from the OpenShift console
+- Under the Workloads menu, select Secrets
+    - Click the `system-seed` secret and scroll down
+    - Clicking the icon on the lefthand side will copy the `ADMIN_PASSWORD` value to your clipboard
+- Navigate to your 3scale Admin Console, which should be present at a URL similar to [https://3scale-admin.apps.lab.redhat.com](https://3scale-admin.apps.lab.redhat.com)
+    - Login with username `admin` and the password copied from the previous step
+- Follow the setup wizard, using the demo APIs we created in the previous section.
+    - The "base URL" for the APIs should be something along the format of [https://3scale-demo-api-1.apps.lab.redhat.com/api](https://3scale-demo-api-1.apps.lab.redhat.com/api)
+    - There are 2 methods defined within each demo instance:
+        - `GET api/hello` responds with some variation of "hello", difference across the three instances
+        - `GET api/check_header` as the name suggest, checks for the presence of a header: `X-Red-Hat-Auth`. If this header is not provided, the API will respond with a `403 Unauthorized` error. Any value is considered valid here. API instance 1 will provide a different message than instances 2 and 3.
+
+## Adding additional backends
+During the setup process, we added one of the API backends. This section will create additional backends and map to our sample product.
