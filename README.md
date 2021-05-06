@@ -121,10 +121,12 @@ With our backends added, it's time to add methods for analytics
 
 - Create new methods for our backends
     - Choose a name and add a description
+
     - Add a new mapping rule
         - The demo APIs only support the "GET" verb
         - Use the "public path" followed by a slash and the method desired. Remember that there are two options: `/hello` and `/check_header`
             - If, for example, API instance 2 has public path `/api2`, using the `/hello` method would require pattern `/api2/hello`
+
         - Under "Method or Metric to increment", select the method we created in the previous step
 
 These steps can be repeated for any other backends and/or methods you'd like to add.
@@ -135,6 +137,7 @@ As you may have noticed, the Configuration menu entry now has a warning sign nex
 - Promote your changes to Staging and on to Production if desired.
 - Validate your API methods by using the `curl` command provided.
     - Ensure that the `?user_key=` and its value are at the end of the request
+    
         ```
-        curl -k "https://api-3scale-apicast-staging.apps.lab.redhat.com:443/api2/hello?user_key=f1adf583c05b160bb62499fd1cd9a98b"
+        curl -k "https://api-3scale-apicast-staging.apps.lab.redhat.com:443/api2/hello?user_key=f1adf583c05b164654499fd1cd9a98b"
         ```
