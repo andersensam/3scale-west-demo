@@ -137,7 +137,85 @@ As you may have noticed, the Configuration menu entry now has a warning sign nex
 - Promote your changes to Staging and on to Production if desired.
 - Validate your API methods by using the `curl` command provided.
     - Ensure that the `?user_key=` and its value are at the end of the request
-    
+
         ```
         curl -k "https://api-3scale-apicast-staging.apps.lab.redhat.com:443/api2/hello?user_key=f1adf583c05b164654499fd1cd9a98b"
         ```
+
+## Cleaning up
+After having explored 3scale API Management sufficiently it's time to tear down and clean up. Luckily, clean up is easy, but does have a few 'gotchas'
+- Go to the "Installed Operators" section in the lefthand menu and remove the 3scale operator
+- From your terminal, use `oc` to delete all objects in the project/namespace created for the demo
+    - If using the namespace `3scale-west-demo`, use the following command
+        ```
+        oc delete namespace 3scale-west-demo
+        ```
+- After object deletion has completed, we need to free up our Persistent Volumes (PVs)
+    - If you do not anticipate re-deploying 3scale in the future, simply delete the PVs and remove the files from your NAS/storage
+    - If you will deploy 3scale again do the following:
+        - In the PersistentVolumes menu, under Storage, edit the YAML of the PVs to remove the section titled `claimRef`
+        
+        At first, the YAML will look something like this (**note** some fields are omitted for brevity):
+        ```
+        kind: PersistentVolume
+        apiVersion: v1
+        metadata:
+        name: 3scale-1
+        selfLink: /api/v1/persistentvolumes/3scale-1
+        uid: d35b7b46-8c9c-4b14-ac0d-8f1d56d046cd
+        resourceVersion: '3761170'
+        creationTimestamp: '2021-04-20T17:18:24Z'
+        annotations:
+            pv.kubernetes.io/bound-by-controller: 'yes'
+        finalizers:
+            - kubernetes.io/pv-protection
+        spec:
+        capacity:
+            storage: 100Gi
+        nfs:
+            server: 192.168.1.210
+            path: /var/nfsshare/claims/1
+        accessModes:
+            - ReadWriteMany
+        ***claimRef:
+            kind: PersistentVolumeClaim
+            namespace: 3scale-northwest-demo
+            name: system-storage
+            uid: 11558186-3bd2-430c-804a-14fd866168e4
+            apiVersion: v1
+            resourceVersion: '3761166'***
+        persistentVolumeReclaimPolicy: Retain
+        volumeMode: Filesystem
+        status:
+        phase: Bound
+        ```
+
+        Remove the `claimRef` section, `status`, and `phase` to result in something like this:
+        ```
+        kind: PersistentVolume
+        apiVersion: v1
+        metadata:
+        name: 3scale-1
+        selfLink: /api/v1/persistentvolumes/3scale-1
+        uid: d35b7b46-8c9c-4b14-ac0d-8f1d56d046cd
+        resourceVersion: '3761170'
+        creationTimestamp: '2021-04-20T17:18:24Z'
+        annotations:
+            pv.kubernetes.io/bound-by-controller: 'yes'
+        finalizers:
+            - kubernetes.io/pv-protection
+        spec:
+        capacity:
+            storage: 100Gi
+        nfs:
+            server: 192.168.1.210
+            path: /var/nfsshare/claims/1
+        accessModes:
+            - ReadWriteMany
+        persistentVolumeReclaimPolicy: Retain
+        volumeMode: Filesystem
+        ```
+    - Repeat this process for the remaining PVs
+
+## Feedback
+Please provide any feedback on this project by pinging me on Google Chat or filing and issue here on Github. Thanks!
