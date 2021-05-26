@@ -21,14 +21,14 @@
         kind: PersistentVolume
         apiVersion: v1
         metadata:
-        name: 3scale-1
+          name: 3scale-1
         spec:
-        capacity:
+          capacity:
             storage: 100Gi
-        nfs:
+          nfs:
             server: 192.168.1.210
             path: /var/nfsshare/claims/1
-        accessModes:
+          accessModes:
             - ReadWriteMany
         ```
         - Through the storage capacity is relatively arbitrary, I've found that provisioning a PV with less than 15Gi typically won't work
@@ -37,14 +37,14 @@
         kind: PersistentVolume
         apiVersion: v1
         metadata:
-        name: 3scale-2
+          name: 3scale-2
         spec:
-        capacity:
+          capacity:
             storage: 100Gi
-        nfs:
+          nfs:
             server: 192.168.1.210
             path: /var/nfsshare/claims/2
-        accessModes:
+          accessModes:
             - ReadWriteOnce
         ```
     - In total, there should be **4 Persistent Volumes** ready for use by the 3scale operator
@@ -160,34 +160,34 @@ After having explored 3scale API Management sufficiently it's time to tear down 
         kind: PersistentVolume
         apiVersion: v1
         metadata:
-        name: 3scale-1
-        selfLink: /api/v1/persistentvolumes/3scale-1
-        uid: d35b7b46-8c9c-4b14-ac0d-8f1d56d046cd
-        resourceVersion: '3761170'
-        creationTimestamp: '2021-04-20T17:18:24Z'
-        annotations:
+          name: 3scale-1
+          selfLink: /api/v1/persistentvolumes/3scale-1
+          uid: d35b7b46-8c9c-4b14-ac0d-8f1d56d046cd
+          resourceVersion: '3761170'
+          creationTimestamp: '2021-04-20T17:18:24Z'
+          annotations:
             pv.kubernetes.io/bound-by-controller: 'yes'
-        finalizers:
+          finalizers:
             - kubernetes.io/pv-protection
         spec:
-        capacity:
+          capacity:
             storage: 100Gi
-        nfs:
+          nfs:
             server: 192.168.1.210
             path: /var/nfsshare/claims/1
-        accessModes:
+          accessModes:
             - ReadWriteMany
-        ***claimRef:
+          ***claimRef:
             kind: PersistentVolumeClaim
             namespace: 3scale-northwest-demo
             name: system-storage
             uid: 11558186-3bd2-430c-804a-14fd866168e4
             apiVersion: v1
             resourceVersion: '3761166'***
-        persistentVolumeReclaimPolicy: Retain
-        volumeMode: Filesystem
+          persistentVolumeReclaimPolicy: Retain
+          volumeMode: Filesystem
         status:
-        phase: Bound
+          phase: Bound
         ```
 
         Remove the `claimRef` section, `status`, and `phase` to result in something like this:
@@ -195,25 +195,25 @@ After having explored 3scale API Management sufficiently it's time to tear down 
         kind: PersistentVolume
         apiVersion: v1
         metadata:
-        name: 3scale-1
-        selfLink: /api/v1/persistentvolumes/3scale-1
-        uid: d35b7b46-8c9c-4b14-ac0d-8f1d56d046cd
-        resourceVersion: '3761170'
-        creationTimestamp: '2021-04-20T17:18:24Z'
-        annotations:
+          name: 3scale-1
+          selfLink: /api/v1/persistentvolumes/3scale-1
+          uid: d35b7b46-8c9c-4b14-ac0d-8f1d56d046cd
+          resourceVersion: '3761170'
+          creationTimestamp: '2021-04-20T17:18:24Z'
+          annotations:
             pv.kubernetes.io/bound-by-controller: 'yes'
-        finalizers:
+          finalizers:
             - kubernetes.io/pv-protection
         spec:
-        capacity:
+          capacity:
             storage: 100Gi
-        nfs:
+          nfs:
             server: 192.168.1.210
             path: /var/nfsshare/claims/1
-        accessModes:
+          accessModes:
             - ReadWriteMany
-        persistentVolumeReclaimPolicy: Retain
-        volumeMode: Filesystem
+          persistentVolumeReclaimPolicy: Retain
+          volumeMode: Filesystem
         ```
     - Repeat this process for the remaining PVs
 

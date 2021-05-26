@@ -1,12 +1,12 @@
 kind: PersistentVolume
 apiVersion: v1
 metadata:
-name: 3scale-2
+  name: 3scale-1
 spec:
-capacity:
+  capacity:
     storage: 100Gi
-nfs:
+  nfs:
     server: 192.168.1.210
-    path: /var/nfsshare/claims/2
-accessModes:
+    path: /var/nfsshare/claims/1
+  accessModes:
     - ReadWriteOnce
